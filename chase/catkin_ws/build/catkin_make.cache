@@ -1,2 +1,0 @@
-ball_chaser:my_robot
--DCATKIN_DEVEL_PREFIX=/home/erkan/Udacity-Robotics-Software/chase/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/erkan/Udacity-Robotics-Software/chase/catkin_ws/install -G Unix Makefiles

@@ -1,8 +1,0 @@
-prefix=/home/erkan/Udacity-Robotics-Software/Home/catkin-ws/devel
-
-Name: add_markers
-Description: Description of add_markers
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
