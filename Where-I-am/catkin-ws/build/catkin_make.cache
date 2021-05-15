@@ -1,0 +1,2 @@
+my_robot:pgm_map_creator:teleop-twist-keyboard-master
+-DCATKIN_DEVEL_PREFIX=/home/erkan/Desktop/Where-I-am/catkin-ws/devel -DCMAKE_INSTALL_PREFIX=/home/erkan/Desktop/Where-I-am/catkin-ws/install -G Unix Makefiles
