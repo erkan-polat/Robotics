@@ -3,7 +3,7 @@ project(gmapping)
 
 find_package(catkin REQUIRED nav_msgs nodelet openslam_gmapping roscpp tf rosbag_storage)
 
-find_package(Boost REQUIRED signals)
+find_package(Boost REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS})
 
@@ -26,7 +26,7 @@ if(catkin_EXPORTED_TARGETS)
 add_dependencies(slam_gmapping_replay ${catkin_EXPORTED_TARGETS})
 endif()
 
-install(TARGETS slam_gmapping slam_gmapping_replay
+install(TARGETS slam_gmapping slam_gmapping_nodelet slam_gmapping_replay
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

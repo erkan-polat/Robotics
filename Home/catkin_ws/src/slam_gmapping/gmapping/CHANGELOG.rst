@@ -2,6 +2,28 @@
 Changelog for package gmapping
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.4.2 (2020-10-02)
+------------------
+* change find_package(Boost REQUIRED signales) to find_package(Boost REQUIRED) for noteic (`#84 <https://github.com/ros-perception/slam_gmapping/issues/84>`_)
+* Contributors: Kei Okada
+
+1.4.1 (2020-03-16)
+------------------
+* Merge pull request `#85 <https://github.com/ros-perception/slam_gmapping/issues/85>`_ from k-okada/install_nodelet
+  install slam_gmapping_nodelet
+* Merge pull request `#87 <https://github.com/ros-perception/slam_gmapping/issues/87>`_ from acxz/patch-1
+  remove signals dep
+* remove signals dep
+  signals is included in boost > 1.70
+* install slam_gmapping_nodelet
+* Contributors: Kei Okada, Michael Ferguson, acxz
+
+1.4.0 (2019-07-12)
+------------------
+* update license to BSD and maintainer to ros-orphaned-packages@googlegroups.com
+  since original gmapping source and ROS openslam_gmapping package has been updated to the BSD-3 license, I think we have no reason to use CC for slam_gmapping package
+* Contributors: Kei Okada
+
 1.3.10 (2018-01-23)
 -------------------
 * Install nodelet plugin descriptor file. (`#56 <https://github.com/ros-perception/slam_gmapping/issues/56>`_)
