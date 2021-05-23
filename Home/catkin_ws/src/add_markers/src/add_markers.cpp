@@ -4,8 +4,8 @@
 #include <visualization_msgs/Marker.h>
 
 
-double P_X = -5.0;
-double P_Y = 7.5;
+double P_X = 2.0;
+double P_Y = 1.5;
 double P_Z = 0.0;
 
 
@@ -19,12 +19,8 @@ int main( int argc, char** argv )
     ros::NodeHandle n;
     ros::Rate r(1);
 
-
     ros::Publisher marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
 
-
-    while (ros::ok())
-    {
     visualization_msgs::Marker marker;
 
 
@@ -34,9 +30,6 @@ int main( int argc, char** argv )
 
     marker.ns = "add_markers"; 
     marker.id = 0;
-
-    marker.action = visualization_msgs::Marker::ADD;
-
 
     marker.pose.position.x = P_X; 
     marker.pose.position.y = P_Y; 
@@ -60,8 +53,14 @@ int main( int argc, char** argv )
 
     marker.lifetime = ros::Duration(5); 
 
-    while (marker_pub.getNumSubscribers() < 1)
+    while (ros::ok())
     {
+
+	marker.header.stamp = ros::Time::now();
+        marker.action = visualization_msgs::Marker::ADD;
+        marker.lifetime = ros::Duration();
+	while (marker_pub.getNumSubscribers() < 1)
+	{
         if (!ros::ok()) 
 	{
         return 0;
@@ -83,7 +82,7 @@ int main( int argc, char** argv )
     marker_drop.ns = "add_markers"; 
     marker_drop.id = 0;
 
-    marker_drop.action = visualization_msgs::Marker::DELETE;
+    marker_drop.action = visualization_msgs::Marker::ADD;
 
 
 
