@@ -4,8 +4,8 @@
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
-double PICKUP_X = 7.5, PICKUP_Y = 10.0;
-double DROPOFF_X = -10.0, DROPOFF_Y = 6.0;
+double PICKUP_X = 1.5, PICKUP_Y = 5.0;
+double DROPOFF_X = -1.0, DROPOFF_Y = 3.0;
 
 int main(int argc, char **argv)
 {

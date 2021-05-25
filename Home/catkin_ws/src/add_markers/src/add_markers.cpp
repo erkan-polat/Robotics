@@ -1,10 +1,9 @@
 #include <ros/ros.h>
-#include <ros/console.h>
-#include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <visualization_msgs/Marker.h>
+#include <nav_msgs/Odometry.h>
 
 
-double P_X = 2.0;
+double P_X = -1.7;
 double P_Y = 1.5;
 double P_Z = 0.0;
 
@@ -19,7 +18,9 @@ int main( int argc, char** argv )
     ros::NodeHandle n;
     ros::Rate r(1);
 
+
     ros::Publisher marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
+
 
     visualization_msgs::Marker marker;
 
@@ -31,6 +32,13 @@ int main( int argc, char** argv )
     marker.ns = "add_markers"; 
     marker.id = 0;
 
+
+    marker.type = shape;
+
+
+    marker.action = visualization_msgs::Marker::ADD;
+
+
     marker.pose.position.x = P_X; 
     marker.pose.position.y = P_Y; 
     marker.pose.position.z = P_Z;
@@ -40,9 +48,9 @@ int main( int argc, char** argv )
     marker.pose.orientation.w = 1.0;
 
 
-    marker.scale.x = 0.5;
-    marker.scale.y = 0.5;
-    marker.scale.z = 0.5;
+    marker.scale.x = 0.2;
+    marker.scale.y = 0.2;
+    marker.scale.z = 0.2;
 
 
     marker.color.r = 0.0f;
@@ -52,15 +60,11 @@ int main( int argc, char** argv )
 
 
     marker.lifetime = ros::Duration(5); 
-
     while (ros::ok())
     {
 
-	marker.header.stamp = ros::Time::now();
-        marker.action = visualization_msgs::Marker::ADD;
-        marker.lifetime = ros::Duration();
-	while (marker_pub.getNumSubscribers() < 1)
-	{
+    while (marker_pub.getNumSubscribers() < 1)
+    {
         if (!ros::ok()) 
 	{
         return 0;
@@ -69,10 +73,13 @@ int main( int argc, char** argv )
         sleep(1);
     }
     marker_pub.publish(marker);
+    ROS_INFO("Published the marker at (1,0, 0.0) !");
 
+
+  
     ros::Duration(10.0).sleep(); 
 
-
+    ROS_INFO("Finished the time gap of sleeping for 10 seconds !");
 
     visualization_msgs::Marker marker_drop;
 
@@ -82,6 +89,7 @@ int main( int argc, char** argv )
     marker_drop.ns = "add_markers"; 
     marker_drop.id = 0;
 
+    marker_drop.type = shape;
     marker_drop.action = visualization_msgs::Marker::ADD;
 
 
@@ -119,7 +127,7 @@ int main( int argc, char** argv )
     }
 
 
-    ros::Duration().sleep(); 
+    ros::Duration().sleep(); s
     return 0;
 }
 }
