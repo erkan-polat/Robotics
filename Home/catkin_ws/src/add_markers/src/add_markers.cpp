@@ -3,14 +3,13 @@
 #include <nav_msgs/Odometry.h>
 
 
-double P_X = -1.7;
-double P_Y = 1.5;
-double P_Z = 0.0;
+double X = 1.7;
+double Y = 3.5;
+double Z = 0.0;
 
-
-double D_X = 0.5;
-double D_Y = 1.0;
-double D_Z = 0.0;
+double X_2 = 0.5;
+double Y_2 = -1.0;
+double Z_2 = 0.0;
 
 int main( int argc, char** argv )
 {
@@ -20,7 +19,6 @@ int main( int argc, char** argv )
 
 
     ros::Publisher marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
-
 
     visualization_msgs::Marker marker;
 
@@ -32,22 +30,21 @@ int main( int argc, char** argv )
     marker.ns = "add_markers"; 
     marker.id = 0;
 
-
     marker.action = visualization_msgs::Marker::ADD;
 
 
-    marker.pose.position.x = P_X; 
-    marker.pose.position.y = P_Y; 
-    marker.pose.position.z = P_Z;
+    marker.pose.position.x = X; 
+    marker.pose.position.y = Y; 
+    marker.pose.position.z = Z;
     marker.pose.orientation.x = 0.0;
     marker.pose.orientation.y = 0.0;
     marker.pose.orientation.z = 0.0;
     marker.pose.orientation.w = 1.0;
 
 
-    marker.scale.x = 0.2;
-    marker.scale.y = 0.2;
-    marker.scale.z = 0.2;
+    marker.scale.x = 0.1;
+    marker.scale.y = 0.1;
+    marker.scale.z = 0.1;
 
 
     marker.color.r = 0.0f;
@@ -70,13 +67,9 @@ int main( int argc, char** argv )
         sleep(1);
     }
     marker_pub.publish(marker);
-    ROS_INFO("Published the marker at (1,0, 0.0) !");
 
 
-  
-    ros::Duration(10.0).sleep(); 
-
-    ROS_INFO("Finished the time gap of sleeping for 10 seconds !");
+    ros::Duration(5.0).sleep(); 
 
     visualization_msgs::Marker marker_drop;
 
@@ -86,15 +79,12 @@ int main( int argc, char** argv )
     marker_drop.ns = "add_markers"; 
     marker_drop.id = 0;
 
-    marker_drop.type = shape;
     marker_drop.action = visualization_msgs::Marker::ADD;
 
 
-
-
-    marker_drop.pose.position.x = D_X; 
-    marker_drop.pose.position.y = D_Y; 
-    marker_drop.pose.position.z = D_Z;
+    marker_drop.pose.position.x = X_2; 
+    marker_drop.pose.position.y = Y_2; 
+    marker_drop.pose.position.z = Z_2;
     marker_drop.pose.orientation.x = 0.0;
     marker_drop.pose.orientation.y = 0.0;
     marker_drop.pose.orientation.z = 0.0;
@@ -125,6 +115,8 @@ int main( int argc, char** argv )
 
 
     ros::Duration().sleep(); 
+
+
     return 0;
 }
 }

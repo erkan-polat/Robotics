@@ -4,8 +4,8 @@
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
-double PICKUP_X = 1.5, PICKUP_Y = 5.0;
-double DROPOFF_X = -1.0, DROPOFF_Y = 3.0;
+double X_1 = -1.5, Y_1 = -3.0;
+double X_2 = -1.0, Y_2 = -1.0;
 
 int main(int argc, char **argv)
 {
@@ -21,6 +21,7 @@ int main(int argc, char **argv)
   }
 
   move_base_msgs::MoveBaseGoal goal;
+
 
   goal.target_pose.header.frame_id = "map";
   goal.target_pose.header.stamp = ros::Time::now();
