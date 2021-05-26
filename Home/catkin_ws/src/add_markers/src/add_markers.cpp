@@ -33,9 +33,6 @@ int main( int argc, char** argv )
     marker.id = 0;
 
 
-    marker.type = shape;
-
-
     marker.action = visualization_msgs::Marker::ADD;
 
 
@@ -127,7 +124,7 @@ int main( int argc, char** argv )
     }
 
 
-    ros::Duration().sleep(); s
+    ros::Duration().sleep(); 
     return 0;
 }
 }
