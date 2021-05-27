@@ -27,8 +27,8 @@ int main(int argc, char **argv)
   goal.target_pose.header.stamp = ros::Time::now();
 
   // Request robot to move to Pickup location
-  goal.target_pose.pose.position.x = PICKUP_X;
-  goal.target_pose.pose.position.y = PICKUP_Y;
+  goal.target_pose.pose.position.x = X_1;
+  goal.target_pose.pose.position.y = Y_1;
   goal.target_pose.pose.orientation.w = 1.0;
 
   ROS_INFO("Robot is travelling to the pickup zone");
@@ -43,8 +43,8 @@ int main(int argc, char **argv)
     ros::Duration(5).sleep();
 
     // Request robot to move to Dropoff location
-    goal.target_pose.pose.position.x = DROPOFF_X;
-    goal.target_pose.pose.position.y = DROPOFF_Y;
+    goal.target_pose.pose.position.x = X_2;
+    goal.target_pose.pose.position.y = Y_2;
     goal.target_pose.pose.orientation.w = 1.0;
 
     ROS_INFO("Robot is travelling to the dropoff zone");
