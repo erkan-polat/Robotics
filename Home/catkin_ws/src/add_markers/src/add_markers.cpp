@@ -3,8 +3,8 @@
 #include <nav_msgs/Odometry.h>
 
 
-double X = 1.7;
-double Y = 3.5;
+double X = 0.0;
+double Y = -2.5;
 double Z = 0.0;
 
 double X_2 = 0.5;

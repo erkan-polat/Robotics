@@ -4,8 +4,13 @@
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
-double X_1 = -1.5, Y_1 = -3.0;
-double X_2 = -1.0, Y_2 = -1.0;
+double X = 0.0;
+double Y = -2.5;
+double Z = 0.0;
+
+double X_2 = 0.5;
+double Y_2 = -1.0;
+double Z_2 = 0.0;
 
 int main(int argc, char **argv)
 {
@@ -27,8 +32,8 @@ int main(int argc, char **argv)
   goal.target_pose.header.stamp = ros::Time::now();
 
   // Request robot to move to Pickup location
-  goal.target_pose.pose.position.x = X_1;
-  goal.target_pose.pose.position.y = Y_1;
+  goal.target_pose.pose.position.x = X;
+  goal.target_pose.pose.position.y = Y;
   goal.target_pose.pose.orientation.w = 1.0;
 
   ROS_INFO("Robot is travelling to the pickup zone");
