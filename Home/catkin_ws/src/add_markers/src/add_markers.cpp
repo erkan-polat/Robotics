@@ -113,9 +113,9 @@ int main( int argc, char** argv )
         sleep(1);
     }
 
+	marker_pub.publish(marker);
 
     ros::Duration().sleep(); 
-
 
     return 0;
 }
