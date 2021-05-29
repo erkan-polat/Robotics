@@ -4,7 +4,7 @@
 
 
 double X = 0.0;
-double Y = -2.5;
+double Y = -1.5;
 double Z = 0.0;
 
 double X_2 = 0.5;
@@ -18,25 +18,26 @@ int main( int argc, char** argv )
 	ros::Rate r(1);
 	ros::Publisher marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
 
+	bool P_Z = false;
+	bool D_Z = false;
 
 	visualization_msgs::Marker marker;
 	marker.type = visualization_msgs::Marker::CUBE;
 	marker.header.frame_id = "map";
-
 
 	marker.ns = "add_markers";
 	marker.id = 0;
 
 	marker.pose.position.x = X;
 	marker.pose.position.y = Y;
-	marker.pose.position.z = Z;
+	marker.pose.position.z =Z;
 	marker.pose.orientation.x = 0.0;
 	marker.pose.orientation.y = 0.0;
 	marker.pose.orientation.z = 0.0;
 	marker.pose.orientation.w = 1.0;
 
-	marker.scale.x = 0.3;
-	marker.scale.y = 0.3;
+	marker.scale.x = 0.2;
+	marker.scale.y = 0.2;
 	marker.scale.z = 0.01;
 
 	marker.color.r = 0.0f;
@@ -47,15 +48,11 @@ int main( int argc, char** argv )
 	while (ros::ok())
 	{
 		
-
 		marker.header.stamp = ros::Time::now();
-
 
 		marker.action = visualization_msgs::Marker::ADD;
 
-		
 		marker.lifetime = ros::Duration();
-
 
 		while (marker_pub.getNumSubscribers() < 1)
 		{
@@ -70,7 +67,12 @@ int main( int argc, char** argv )
 		
 		r.sleep();
 
+
+		n.getParam("pickup zone", P_Z);
+		if (P_Z)
+			break;
 	}  
+
 
 
 
@@ -78,6 +80,15 @@ int main( int argc, char** argv )
 	ROS_INFO("Deleting marker");
 	marker.action = visualization_msgs::Marker::DELETE;
 	marker_pub.publish(marker);
+
+
+	while (true)   
+	{
+		n.getParam("dropoff zone", D_Z);
+		if (D_Z)
+			break;
+	}
+
 
 	marker.pose.position.x = X_2;
 	marker.pose.position.y = Y_2;

@@ -5,70 +5,93 @@
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
 double X = 0.0;
-double Y = -2.5;
+double Y = -1.5;
 double Z = 0.0;
 
 double X_2 = 0.5;
 double Y_2 = -1.0;
 double Z_2 = 0.0;
 
-int main(int argc, char **argv)
+
+int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "pick_objects");
+	// Initialize the simple_navigation_goals node
+	ros::init(argc, argv, "pick_objects");
 
-  //tell the action client that we want to spin a thread by default
-  MoveBaseClient ac("move_base", true);
+	// Nodehandle to set boolean params on Parameter Server
+	ros::NodeHandle nh;
+	nh.setParam("robot_at_pickup_zone", false);
+	nh.setParam("robot_at_dropoff_zone", false);
 
-  //wait for the action server to come up
-  while (!ac.waitForServer(ros::Duration(5.0)))
-  {
-    ROS_INFO("Waiting for the move_base action server to come up");
-  }
+	// tell the action client "move_base" that we want to spin a thread by default
+	MoveBaseClient ac("move_base", true);
 
-  move_base_msgs::MoveBaseGoal goal;
+	// Wait 5 sec for move_base action server to come up
+	while(!ac.waitForServer(ros::Duration(5.0)))
+	{
+		ROS_INFO("Waiting for the move_base action server to come up");
+	}
 
+	move_base_msgs::MoveBaseGoal goal;
 
-  goal.target_pose.header.frame_id = "map";
-  goal.target_pose.header.stamp = ros::Time::now();
+	// set up the frame parameters
+	goal.target_pose.header.frame_id = "map";
+	goal.target_pose.header.stamp = ros::Time::now();
 
-  // Request robot to move to Pickup location
-  goal.target_pose.pose.position.x = X;
-  goal.target_pose.pose.position.y = Y;
-  goal.target_pose.pose.orientation.w = 1.0;
+	// GO TO PICK-UP LOCATION
+	goal.target_pose.pose.position.x = X;
+	goal.target_pose.pose.position.y = Y; 
+	goal.target_pose.pose.orientation.w = 1.0;
+	goal.target_pose.pose.orientation.z = Z;
 
-  ROS_INFO("Robot is travelling to the pickup zone");
-  ac.sendGoal(goal);
-  ac.waitForResult();
+	// Send the goal position and orientation for the robot to reach
+	ROS_INFO("Sending pick-up location coordinates");
+	ac.sendGoal(goal);
 
-  if (ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
-  {
+	// Wait an infinite time for the results (blocking)
+	ac.waitForResult();
 
-    ROS_INFO("Robot picked up the virtual object");
-    // Wait for 5 seconds
-    ros::Duration(5).sleep();
+	// Check if the robot reached its goal
+	if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
+	{
+		ROS_INFO("Reached pickup zone");
+		nh.setParam("robot_at_pickup_zone", true);
+	}
+	else
+	{
+		ROS_WARN_ONCE("Failed to reach pick up zone!");
+	}
 
-    // Request robot to move to Dropoff location
-    goal.target_pose.pose.position.x = X_2;
-    goal.target_pose.pose.position.y = Y_2;
-    goal.target_pose.pose.orientation.w = 1.0;
+	ros::Duration(5).sleep(); // sleep for 5 seconds
 
-    ROS_INFO("Robot is travelling to the dropoff zone");
-    ac.sendGoal(goal);
-    ac.waitForResult();
-    if (ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
-    {
-      // Robot reached dropoff zone
-      ROS_INFO("Robot dropped the virtual object");
-    }
-    else
-    {
-      ROS_INFO("Unable to get to the dropoff zone");
-    }
-  }
-  else
-  {
-    ROS_INFO("Unable to get to the pickup zone");
-  }
+	// GO TO DROP-OFF LOCATION
+	goal.target_pose.pose.position.x = X_2;
+	goal.target_pose.pose.position.y = Y_2; 
+	goal.target_pose.pose.orientation.w = 0.0;
+	goal.target_pose.pose.orientation.z = Z_2;
 
-  return 0;
+	// Send the goal position and orientation for the robot to reach
+	ROS_INFO("Sending drop-off location coordinates");
+	ac.sendGoal(goal);
+
+	// Wait an infinite time for the results (blocking)
+	ac.waitForResult();
+
+	// Check if the robot reached its goal
+	if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
+	{
+		ROS_INFO("Reached drop-off zone");
+		nh.setParam("robot_at_dropoff_zone", true);
+	}
+	else
+	{
+		ROS_INFO("Failed to reach drop off zone!");
+	}
+
+	while (true)
+	{
+		if (!ros::ok())
+           		return 0;
+  	}
+
 }
