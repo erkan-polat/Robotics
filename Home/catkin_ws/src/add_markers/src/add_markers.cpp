@@ -66,7 +66,7 @@ int main( int argc, char** argv )
 		marker_pub.publish(marker);
 		
 		r.sleep();
-		n.getParam("robot_at_pickup_zone", p_z);
+		n.getParam("pickup_zone", p_z);
 		if (p_z)
 			break;
 	}  
@@ -78,7 +78,7 @@ int main( int argc, char** argv )
 
 	while (true)   
 	{
-		n.getParam("robot_at_dropoff_zone", d_z);
+		n.getParam("dropoff_zone", d_z);
 		if (d_z)
 			break;
 	}
