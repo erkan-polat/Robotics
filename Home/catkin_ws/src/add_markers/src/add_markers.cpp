@@ -18,8 +18,8 @@ int main( int argc, char** argv )
 	ros::Rate r(1);
 	ros::Publisher marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
 
-	bool robot_at_pickup_zone = false;
-	bool robot_at_dropoff_zone = false;
+	bool p_z = false;
+	bool d_z = false;
 
 	visualization_msgs::Marker marker;
 	marker.type = visualization_msgs::Marker::CUBE;
@@ -66,8 +66,8 @@ int main( int argc, char** argv )
 		marker_pub.publish(marker);
 		
 		r.sleep();
-		n.getParam("robot_at_pickup_zone", robot_at_pickup_zone);
-		if (robot_at_pickup_zone)
+		n.getParam("robot_at_pickup_zone", p_z);
+		if (p_z)
 			break;
 	}  
 
@@ -78,8 +78,8 @@ int main( int argc, char** argv )
 
 	while (true)   
 	{
-		n.getParam("robot_at_dropoff_zone", robot_at_dropoff_zone);
-		if (robot_at_dropoff_zone)
+		n.getParam("robot_at_dropoff_zone", d_z);
+		if (d_z)
 			break;
 	}
 
