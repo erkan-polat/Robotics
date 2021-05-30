@@ -4,14 +4,8 @@
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
-
-double X = 0.0;
-double Y = -1.5;
-double Z = 0.0;
-
-double X_2 = 0.5;
-double Y_2 = -1.0;
-double Z_2 = 0.0;
+double P_X = 0.0, P_Y = -1.5;
+double D_X = 0.5, D_Y = -1.0;
 
 int main(int argc, char **argv)
 {
@@ -22,7 +16,7 @@ int main(int argc, char **argv)
 
   while (!ac.waitForServer(ros::Duration(5.0)))
   {
-    ROS_INFO("Waiting for the move_base action server to come up");
+    ROS_INFO("Waiting for the move_base");
   }
 
   move_base_msgs::MoveBaseGoal goal;
@@ -30,9 +24,9 @@ int main(int argc, char **argv)
   goal.target_pose.header.frame_id = "map";
   goal.target_pose.header.stamp = ros::Time::now();
 
-  goal.target_pose.pose.position.x = X;
-  goal.target_pose.pose.position.y = Y;
-  goal.target_pose.pose.position.z = Z;
+
+  goal.target_pose.pose.position.x = P_X;
+  goal.target_pose.pose.position.y = P_Y;
   goal.target_pose.pose.orientation.w = 1.0;
 
   ROS_INFO("Robot is travelling to the pickup zone");
@@ -43,11 +37,12 @@ int main(int argc, char **argv)
   {
 
     ROS_INFO("Robot picked up the virtual object");
+    // Wait for 5 seconds
     ros::Duration(5).sleep();
 
-    goal.target_pose.pose.position.x = X_2;
-    goal.target_pose.pose.position.y = Y_2;
-    goal.target_pose.pose.position.z = Z_2;
+    // Request robot to move to Dropoff location
+    goal.target_pose.pose.position.x = D_X;
+    goal.target_pose.pose.position.y = D_Y;
     goal.target_pose.pose.orientation.w = 1.0;
 
     ROS_INFO("Robot is travelling to the dropoff zone");

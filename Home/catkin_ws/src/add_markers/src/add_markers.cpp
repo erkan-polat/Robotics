@@ -1,116 +1,120 @@
 #include <ros/ros.h>
+#include <ros/console.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <visualization_msgs/Marker.h>
-#include <nav_msgs/Odometry.h>
 
+double r_x, r_y;
+double P_X = 0.0, P_Y = -1.5;
+double D_X = 0.5, D_Y = -1.0;
+int wait = 0;
 
-double X = 0.0;
-double Y = -1.5;
-double Z = 0.0;
-
-double X_2 = 0.5;
-double Y_2 = -1.0;
-double Z_2 = 0.0;
-
-int main( int argc, char** argv )
+void PoseCallback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr &msg_amcl)
 {
-	ros::init(argc, argv, "add_markers");
-	ros::NodeHandle n;
-	ros::Rate r(1);
-	ros::Publisher marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
 
-	bool p_z = false;
-	bool d_z = false;
+  r_x = msg_amcl->pose.pose.position.x;
+  r_y = msg_amcl->pose.pose.position.y;
+}
 
-	visualization_msgs::Marker marker;
-	marker.type = visualization_msgs::Marker::CUBE;
-	marker.header.frame_id = "map";
+int main(int argc, char **argv)
+{
+  ros::init(argc, argv, "basic_shapes");
+  ros::NodeHandle n;
+  ros::Publisher marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
 
-	marker.ns = "add_markers";
-	marker.id = 0;
+  int state = 0;
 
-	marker.pose.position.x = X;
-	marker.pose.position.y = Y;
-	marker.pose.position.z = Z;
-	marker.pose.orientation.x = 0.0;
-	marker.pose.orientation.y = 0.0;
-	marker.pose.orientation.z = 0.0;
-	marker.pose.orientation.w = 1.0;
+  // Set our initial shape type to be a cube
+  uint32_t shape = visualization_msgs::Marker::CUBE;
 
-	marker.scale.x = 0.2;
-	marker.scale.y = 0.2;
-	marker.scale.z = 0.01;
+  visualization_msgs::Marker marker;
+  // Set the frame ID and timestamp.  See the TF tutorials for information on these.
+  marker.header.frame_id = "map";
+  marker.header.stamp = ros::Time::now();
 
-	marker.color.r = 0.0f;
-	marker.color.g = 0.0f;
-	marker.color.b = 1.0f;
-	marker.color.a = 1.0;
+  // Set the namespace and id for this marker.  This serves to create a unique ID
+  // Any marker sent with the same namespace and id will overwrite the old one
+  marker.ns = "basic_shapes";
+  marker.id = 0;
 
-	while (ros::ok())
-	{
+  // Set the marker type.  Initially this is CUBE, and cycles between that and SPHERE, ARROW, and CYLINDER
+  marker.type = shape;
 
-		marker.header.stamp = ros::Time::now();
-		marker.action = visualization_msgs::Marker::ADD;
+  // Set marker orientation
+  marker.pose.orientation.x = 0.0;
+  marker.pose.orientation.y = 0.0;
+  marker.pose.orientation.z = 0.0;
+  marker.pose.orientation.w = 1.0;
 
-		marker.lifetime = ros::Duration();
+  // Set the scale of the marker -- 1x1x1 here means 1m on a side
+  marker.scale.x = 0.3;
+  marker.scale.y = 0.3;
+  marker.scale.z = 0.3;
 
+  // Set the color -- be sure to set alpha to something non-zero!
+  marker.color.r = 0.0f;
+  marker.color.g = 0.0f;
+  marker.color.b = 1.0f;
+  marker.color.a = 1.0;
 
-		while (marker_pub.getNumSubscribers() < 1)
-		{
-			if (!ros::ok())
-			{
-				return 0;
-			}
-			ROS_WARN_ONCE("Please create a subscriber to the marker");
-			sleep(1);
-		}
-		marker_pub.publish(marker);
-		
-		r.sleep();
-		n.getParam("pickup_zone", p_z);
-		if (p_z)
-			break;
-	}  
+  marker.pose.position.z = 0;
 
-	ROS_INFO("Deleting marker");
-	marker.action = visualization_msgs::Marker::DELETE;
-	marker_pub.publish(marker);
+  marker.lifetime = ros::Duration();
+
+  // Subscribe to /amcl_pose
+  ros::Subscriber sub1 = n.subscribe("/amcl_pose", 1000, PoseCallback);
+
+  while (ros::ok())
+  {
 
 
-	while (true)   
-	{
-		n.getParam("dropoff_zone", d_z);
-		if (d_z)
-			break;
-	}
+    if (state == 0)
+    {
+      double distance1 = abs(r_x - P_X) + abs(r_y - P_Y);
 
-	marker.pose.position.x = X_2;
-	marker.pose.position.y = Y_2;
-	marker.pose.position.z = Z_2;
-	marker.pose.orientation.x = 0.0;
-	marker.pose.orientation.y = 0.0;
-	marker.pose.orientation.z = 0.0;
-	marker.pose.orientation.w = 1.0;
+      if (distance1 > 0.01)
+      {
+        marker.action = visualization_msgs::Marker::ADD;
+        marker.pose.position.x = P_X;
+        marker.pose.position.y = P_Y;
+      }
+      else
+      {
+        state = 1;
+        marker.action = visualization_msgs::Marker::DELETE;
+      }
+    }
 
-	ROS_INFO("Adding marker at drop-off location");
-	while (ros::ok())
-	{
-		
-		marker.header.stamp = ros::Time::now();
-		marker.action = visualization_msgs::Marker::ADD;
-		marker.lifetime = ros::Duration();
+    else if (state == 1)
+    {
+      if (wait < 5)
+      {
+        wait += 1;
+      }
+      else
+      {
+        state = 2;
+      }
+    }
 
+    else if (state == 2)
+    {
 
-		while (marker_pub.getNumSubscribers() < 1)
-		{
-			if (!ros::ok())
-			{
-				return 0;
-			}
-			ROS_WARN_ONCE("Please create a subscriber to the marker");
-			sleep(1);
-		}
-		marker_pub.publish(marker);
-		
-		r.sleep();
-	}  
+      double distance2 = abs(r_x- D_X) + abs(r_y- D_Y);
+
+      if (distance2 > 0.01)
+      {
+        marker.action = visualization_msgs::Marker::DELETE;
+      }
+      else
+      {
+        marker.action = visualization_msgs::Marker::ADD;
+        marker.pose.position.x = D_X;
+        marker.pose.position.y = D_Y;
+      }
+    }
+
+    marker_pub.publish(marker);
+    sleep(1);
+    ros::spinOnce();
+  }
 }
