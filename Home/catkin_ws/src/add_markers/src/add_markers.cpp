@@ -18,8 +18,8 @@ int main( int argc, char** argv )
 	ros::Rate r(1);
 	ros::Publisher marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
 
-	bool P_Z = false;
-	bool D_Z = false;
+	bool robot_at_pickup_zone = false;
+	bool robot_at_dropoff_zone = false;
 
 	visualization_msgs::Marker marker;
 	marker.type = visualization_msgs::Marker::CUBE;
@@ -30,7 +30,7 @@ int main( int argc, char** argv )
 
 	marker.pose.position.x = X;
 	marker.pose.position.y = Y;
-	marker.pose.position.z =Z;
+	marker.pose.position.z = Z;
 	marker.pose.orientation.x = 0.0;
 	marker.pose.orientation.y = 0.0;
 	marker.pose.orientation.z = 0.0;
@@ -47,12 +47,12 @@ int main( int argc, char** argv )
 
 	while (ros::ok())
 	{
-		
-		marker.header.stamp = ros::Time::now();
 
+		marker.header.stamp = ros::Time::now();
 		marker.action = visualization_msgs::Marker::ADD;
 
 		marker.lifetime = ros::Duration();
+
 
 		while (marker_pub.getNumSubscribers() < 1)
 		{
@@ -66,16 +66,10 @@ int main( int argc, char** argv )
 		marker_pub.publish(marker);
 		
 		r.sleep();
-
-
-		n.getParam("pickup zone", P_Z);
-		if (P_Z)
+		n.getParam("robot_at_pickup_zone", robot_at_pickup_zone);
+		if (robot_at_pickup_zone)
 			break;
 	}  
-
-
-
-
 
 	ROS_INFO("Deleting marker");
 	marker.action = visualization_msgs::Marker::DELETE;
@@ -84,11 +78,10 @@ int main( int argc, char** argv )
 
 	while (true)   
 	{
-		n.getParam("dropoff zone", D_Z);
-		if (D_Z)
+		n.getParam("robot_at_dropoff_zone", robot_at_dropoff_zone);
+		if (robot_at_dropoff_zone)
 			break;
 	}
-
 
 	marker.pose.position.x = X_2;
 	marker.pose.position.y = Y_2;
@@ -103,11 +96,9 @@ int main( int argc, char** argv )
 	{
 		
 		marker.header.stamp = ros::Time::now();
-
 		marker.action = visualization_msgs::Marker::ADD;
-
-		
 		marker.lifetime = ros::Duration();
+
 
 		while (marker_pub.getNumSubscribers() < 1)
 		{
