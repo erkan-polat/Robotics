@@ -69,7 +69,7 @@ int main(int argc, char **argv)
 
     if (state == 0)
     {
-      double distance1 = abs(r_x - P_X) + abs(r_y - P_Y);
+      double distance1 = sqrt(pow((P_X - r_x), 2) + pow((P_Y - r_y), 2));
 
       if (distance1 > 0.01)
       {
@@ -99,7 +99,7 @@ int main(int argc, char **argv)
     else if (state == 2)
     {
 
-      double distance2 = abs(r_x- D_X) + abs(r_y- D_Y);
+      double distance2 = sqrt(pow((D_X - r_x), 2) + pow((D_Y - r_y), 2));
 
       if (distance2 > 0.01)
       {
