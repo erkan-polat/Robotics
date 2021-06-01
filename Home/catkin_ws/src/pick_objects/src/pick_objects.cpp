@@ -4,8 +4,8 @@
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
-double P_X = 0.0, P_Y = -1.5;
-double D_X = 0.5, D_Y = -1.0;
+double P_X = 0.0, P_Y = -1.5, P_Z = 0.0;
+double D_X = 0.5, D_Y = -1.0, D_Z = 0.0;
 
 int main(int argc, char **argv)
 {
@@ -14,9 +14,10 @@ int main(int argc, char **argv)
 
   MoveBaseClient ac("move_base", true);
 
+
   while (!ac.waitForServer(ros::Duration(5.0)))
   {
-    ROS_INFO("Waiting for the move_base");
+    ROS_INFO("Waiting for the move_base action server to come up");
   }
 
   move_base_msgs::MoveBaseGoal goal;
@@ -24,7 +25,7 @@ int main(int argc, char **argv)
   goal.target_pose.header.frame_id = "map";
   goal.target_pose.header.stamp = ros::Time::now();
 
-
+  // Request robot to move to Pickup location
   goal.target_pose.pose.position.x = P_X;
   goal.target_pose.pose.position.y = P_Y;
   goal.target_pose.pose.orientation.w = 1.0;
