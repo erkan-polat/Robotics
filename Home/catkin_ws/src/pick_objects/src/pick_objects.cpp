@@ -11,10 +11,10 @@ int main(int argc, char **argv)
 {
   ros::init(argc, argv, "pick_objects");
 
-
+  //tell the action client that we want to spin a thread by default
   MoveBaseClient ac("move_base", true);
 
-
+  //wait for the action server to come up
   while (!ac.waitForServer(ros::Duration(5.0)))
   {
     ROS_INFO("Waiting for the move_base action server to come up");
@@ -28,6 +28,7 @@ int main(int argc, char **argv)
   // Request robot to move to Pickup location
   goal.target_pose.pose.position.x = P_X;
   goal.target_pose.pose.position.y = P_Y;
+  goal.target_pose.pose.position.z = P_Z;
   goal.target_pose.pose.orientation.w = 1.0;
 
   ROS_INFO("Robot is travelling to the pickup zone");
@@ -43,7 +44,8 @@ int main(int argc, char **argv)
 
     // Request robot to move to Dropoff location
     goal.target_pose.pose.position.x = D_X;
-    goal.target_pose.pose.position.y = D_Y;
+    goal.target_pose.pose.position.y = D_X;
+    goal.target_pose.pose.position.z = D_Z;
     goal.target_pose.pose.orientation.w = 1.0;
 
     ROS_INFO("Robot is travelling to the dropoff zone");
